@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#DAB25E" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#DAB25E" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="vignette" x1="0" y1="100%" x2="0" y2="0">
+      <stop offset="0%" stop-color="#0E0D0C" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#0E0D0C" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0E0D0C"/>
+  <circle cx="900" cy="315" r="380" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#vignette)"/>
+
+  <!-- Logo mark -->
+  <g transform="translate(80, 90)">
+    <circle cx="28" cy="28" r="26" stroke="#DAB25E" stroke-width="1.6" fill="none"/>
+    <path d="M14 38 Q28 14 42 38" stroke="#DAB25E" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M38 33 L42 38 L36 40" stroke="#DAB25E" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="76" y="36" font-family="Inter, sans-serif" font-size="20" font-weight="600" letter-spacing="3" fill="#F4EDE0">CEO FLOW <tspan fill="#DAB25E">SYSTEMS</tspan></text>
+  </g>
+
+  <!-- Headline -->
+  <text x="80" y="320" font-family="Instrument Serif, Times, serif" font-size="84" fill="#F4EDE0" letter-spacing="-1.5">Most ad spend</text>
+  <text x="80" y="408" font-family="Instrument Serif, Times, serif" font-size="84" fill="#F4EDE0" letter-spacing="-1.5">leaks out the back.</text>
+  <text x="80" y="496" font-family="Instrument Serif, Times, serif" font-style="italic" font-size="84" fill="#DAB25E" letter-spacing="-1.5">We rebuild the system underneath.</text>
+
+  <!-- Bottom rule -->
+  <line x1="80" y1="560" x2="320" y2="560" stroke="#DAB25E" stroke-width="1.5"/>
+  <text x="80" y="592" font-family="Inter, sans-serif" font-size="16" letter-spacing="3" fill="#A89F8E">CEOFLOWSYSTEMS.COM</text>
+</svg>

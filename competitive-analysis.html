@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Competitive Analysis — CEO Flow Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f6f4f0;
+    --paper-card: #fffefa;
+    --ink: #1a1715;
+    --ink-soft: #4a423d;
+    --rule: #d8d0c4;
+    --accent: #c45d3e;
+    --gold: #c9a25a;
+    --muted: #8c8278;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+    font-size: 15px;
+    position: relative;
+  }
+  /* grain */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    pointer-events: none; opacity: .55; z-index: 0;
+  }
+  .page { max-width: 880px; margin: 0 auto; padding: 64px 56px 96px; position: relative; z-index: 1; }
+  h1, h2, h3, h4 { font-family: "Instrument Serif", serif; font-weight: 400; letter-spacing: -.01em; }
+  h1 { font-size: 64px; line-height: 1.04; margin-bottom: 24px; }
+  h2 { font-size: 36px; line-height: 1.1; margin-bottom: 14px; }
+  h3 { font-size: 26px; line-height: 1.15; margin-bottom: 8px; }
+  h4 { font-size: 20px; line-height: 1.2; margin-bottom: 6px; }
+  p { color: var(--ink-soft); margin-bottom: 10px; }
+  em.italic-serif { font-family: "Instrument Serif", serif; font-style: italic; color: var(--ink); }
+
+  /* COVER */
+  .cover {
+    padding: 80px 0 56px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 56px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 32px;
+  }
+  .cover .meta {
+    margin-top: 36px;
+    display: flex; gap: 40px;
+    font-size: 13px; color: var(--muted);
+    letter-spacing: .02em;
+  }
+  .cover .meta strong { color: var(--ink); display: block; font-weight: 500; margin-bottom: 2px; }
+
+  /* EXEC SUMMARY */
+  .exec {
+    background: var(--paper-card);
+    border-left: 4px solid var(--accent);
+    padding: 32px 36px;
+    margin-bottom: 64px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.02);
+  }
+  .exec p { font-size: 17px; line-height: 1.65; color: var(--ink); font-family: "Instrument Serif", serif; font-style: italic; }
+
+  /* SECTIONS */
+  section { margin-bottom: 72px; }
+  .section-num {
+    font-family: "Instrument Serif", serif;
+    font-size: 90px;
+    line-height: 1;
+    color: var(--rule);
+    margin-bottom: -10px;
+  }
+
+  /* COMPETITOR CARD */
+  .comp {
+    background: var(--paper-card);
+    border-left: 4px solid var(--gold);
+    padding: 28px 32px;
+    margin-bottom: 22px;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .comp:hover { box-shadow: 0 8px 28px rgba(0,0,0,.06); transform: translateY(-1px); }
+  .comp .row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 24px; margin-bottom: 14px;
+  }
+  .comp h3 { margin-bottom: 0; }
+  .comp .url { font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+  .comp .quote {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--ink);
+    padding: 14px 0 18px;
+    border-bottom: 1px dashed var(--rule);
+    margin-bottom: 16px;
+  }
+  .comp .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 28px;
+    font-size: 13.5px;
+  }
+  .comp .grid h4 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; font-family: "DM Sans", sans-serif; color: var(--accent); margin-bottom: 4px; }
+  .comp .grid p { font-size: 13.5px; color: var(--ink-soft); }
+  .swatch-row { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+  .swatch {
+    width: 28px; height: 28px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,.08);
+    position: relative;
+  }
+  .swatch::after {
+    content: attr(data-hex);
+    position: absolute;
+    bottom: -16px; left: 50%; transform: translateX(-50%);
+    font-size: 9px; color: var(--muted);
+    white-space: nowrap;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tag {
+    display: inline-block;
+    background: var(--paper);
+    color: var(--ink-soft);
+    font-size: 11px;
+    letter-spacing: .04em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+  }
+
+  /* COMPARISON TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: var(--paper-card);
+    margin-bottom: 18px;
+  }
+  th, td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+  }
+  th {
+    background: var(--paper);
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  td.score { text-align: center; font-variant-numeric: tabular-nums; }
+  td.score.high { color: var(--accent); font-weight: 600; }
+  tr.total { background: var(--paper); font-weight: 600; }
+
+  /* PATTERNS */
+  .pattern {
+    background: var(--paper-card);
+    padding: 28px 32px;
+    margin-bottom: 14px;
+    border-left: 4px solid var(--accent);
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .pattern .n {
+    font-family: "Instrument Serif", serif;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .pattern h3 { margin-bottom: 6px; }
+
+  /* RECOMMENDATION */
+  .rec {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 56px 48px;
+    margin-bottom: 32px;
+  }
+  .rec h2 { color: var(--paper); }
+  .rec p { color: rgba(246,244,240,.78); margin-bottom: 14px; }
+  .rec .badge { color: var(--gold); border-color: var(--gold); }
+  .rec .pair {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 18px 32px;
+    margin-top: 28px;
+    font-size: 14px;
+  }
+  .rec .pair h4 { color: var(--gold); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-family: "DM Sans", sans-serif; }
+  .rec .pair p { color: rgba(246,244,240,.78); }
+  .rec .swatch-row .swatch { border-color: rgba(255,255,255,.2); }
+  .rec .swatch::after { color: rgba(246,244,240,.55); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 28px;
+    margin-top: 64px;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex; justify-content: space-between;
+  }
+
+  /* PRINT */
+  @media print {
+    body::before { display: none; }
+    body { background: white; font-size: 11pt; }
+    .page { max-width: none; padding: 24mm 20mm; }
+    section { page-break-inside: avoid; }
+    .comp, .pattern { page-break-inside: avoid; }
+    h1 { font-size: 48pt; }
+    h2 { font-size: 22pt; }
+    h3 { font-size: 16pt; }
+    .rec { background: #1a1715 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .comp { box-shadow: none; }
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 32px 20px 56px; }
+    h1 { font-size: 42px; }
+    h2 { font-size: 28px; }
+    .comp .grid { grid-template-columns: 1fr; }
+    .pattern { grid-template-columns: 1fr; gap: 8px; }
+    .rec { padding: 36px 24px; }
+    .rec .pair { grid-template-columns: 1fr; }
+    .cover .meta { flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- COVER -->
+  <header class="cover">
+    <span class="badge">Competitive Analysis</span>
+    <h1>The Premium Paid-Ads<br>Agency Landscape <em class="italic-serif">— and where CEO Flow Systems wins.</em></h1>
+    <p style="font-size:17px; max-width: 640px;">An audit of the five reference brands operator-CEOs evaluate when choosing a paid-acquisition partner — what they do well, where they leak premium, and what the rebuild should adopt.</p>
+    <div class="meta">
+      <div><strong>Prepared for</strong>CEO Flow Systems</div>
+      <div><strong>Date</strong>May 17, 2026</div>
+      <div><strong>Scope</strong>5 competitor audits · 1 patterns brief</div>
+    </div>
+  </header>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="exec">
+    <p>The premium positioning gap in this category is wide open in one specific direction: <strong style="font-style:normal;">dark, editorial, restrained — with a named methodology — for operator-CEOs.</strong> No leading agency owns the lit-up dark + champagne aesthetic. Acquisition.com gets close but reads as info-product. Tier 11 has the right voice but a corporate look. Common Thread productized its method ("Prophit Engine") and turned the agency into a platform — the single most copy-able move. CFS already owns the right palette; what's missing is editorial discipline, restraint, and a proper-noun framework.</p>
+  </div>
+
+  <!-- COMPETITOR PROFILES -->
+  <section>
+    <div class="section-num">01</div>
+    <h2>Competitor Profiles</h2>
+    <p style="margin-bottom: 24px; font-size: 15px;">Five agencies — boutique consultancy to enterprise growth firm — that bigger operators evaluate when choosing a partner.</p>
+
+    <article class="comp">
+      <div class="row"><h3>Tier 11</h3><span class="url">tiereleven.com</span></div>
+      <p class="quote">"We find what's holding you back. Then we fix it."</p>
+      <div class="grid">
+        <div><h4>Positioning</h4><p>Boutique strategic consultancy. Refuses to sell ads — sells diagnosis first.</p></div>
+        <div><h4>Above-fold proof</h4><p>6 logos (Lawn Doctor, Mindvalley, AirSculpt, Pet Meds, Milk Street, Credit Repair Cloud). One testimonial quote.</p></div>
+        <div><h4>Type system</h4><p>Inter — single-family discipline.</p></div>
+        <div><h4>Palette</h4>
+          <div class="swatch-row">
+            <span class="swatch" style="background:#ff6496" data-hex="#ff6496"></span>
+            <span class="swatch" style="background:#7958d2" data-hex="#7958d2"></span>
+            <span class="swatch" style="background:#fed61b" data-hex="#fed61b"></span>
+            <span class="swatch" style="background:#f4f4f4; border-color:#ccc" data-hex="#f4f4f4"></span>
+            <span class="swatch" style="background:#222222" data-hex="#222222"></span>
+          </div>
+        </div>
+      </div>
+      <div class="tags"><span class="tag">Strength · Consultative voice</span><span class="tag">Weakness · No brag metrics</span></div>
+    </article>
+
+    <article class="comp">
+      <div class="row"><h3>Common Thread Collective</h3><span class="url">commonthreadco.com</span></div>
+      <p class="quote">"Your ecommerce profit partner."</p>
+      <div class="grid">
+        <div><h4>Positioning</h4><p>Productized methodology — sells the "Prophit Engine" platform, not the agency.</p></div>
+        <div><h4>Above-fold proof</h4><p>16 logos (Theragun, Ann Taylor, ColourPop, Nike Strength, Liquid Death). "$3B in profitable growth engineered."</p></div>
+        <div><h4>Type system</h4><p>Poppins (headings) + Inter (modules).</p></div>
+        <div><h4>Palette</h4>
+          <div class="swatch-row">
+            <span class="swatch" style="background:#1c3041" data-hex="#1c3041"></span>
+            <span class="swatch" style="background:#d8ff32" data-hex="#d8ff32"></span>
+            <span class="swatch" style="background:#9AAFB9" data-hex="#9AAFB9"></span>
+            <span class="swatch" style="background:#f9fafb; border-color:#ccc" data-hex="#f9fafb"></span>
+          </div>
+        </div>
+      </div>
+      <div class="tags"><span class="tag">Strength · Named IP ("Prophit Engine")</span><span class="tag">Weakness · Vague value prop</span></div>
+    </article>
+
+    <article class="comp">
+      <div class="row"><h3>Acquisition.com</h3><span class="url">acquisition.com</span></div>
+      <p class="quote">"Do you want to scale your business?"</p>
+      <div class="grid">
+        <div><h4>Positioning</h4><p>Founder-led brand. Identity over offer. Two-shot of Hormozi + Leila.</p></div>
+        <div><h4>Above-fold proof</h4><p>$250M+ portfolio, 12M+ subscribers, $46.2M PE exit, 1M+ books sold.</p></div>
+        <div><h4>Type system</h4><p>Poppins everywhere — heavy weights (800).</p></div>
+        <div><h4>Palette</h4>
+          <div class="swatch-row">
+            <span class="swatch" style="background:#131628" data-hex="#131628"></span>
+            <span class="swatch" style="background:#6f00ff" data-hex="#6f00ff"></span>
+            <span class="swatch" style="background:#F44336" data-hex="#F44336"></span>
+            <span class="swatch" style="background:#fafafa; border-color:#ccc" data-hex="#fafafa"></span>
+          </div>
+        </div>
+      </div>
+      <div class="tags"><span class="tag">Strength · Operator-coded brag metrics</span><span class="tag">Weakness · Reads as info-product</span></div>
+    </article>
+
+    <article class="comp">
+      <div class="row"><h3>KlientBoost</h3><span class="url">klientboost.com</span></div>
+      <p class="quote">"The performance marketing agency that hits bigger goals."</p>
+      <div class="grid">
+        <div><h4>Positioning</h4><p>Performance-with-personality. Doodle illustrations own the brand.</p></div>
+        <div><h4>Above-fold proof</h4><p>"88% of client goals hit in Q1 2026." G2 + Clutch badges. Dated stat shows freshness.</p></div>
+        <div><h4>Type system</h4><p>Inter + Lato + Gloria Hallelujah for doodles.</p></div>
+        <div><h4>Palette</h4>
+          <div class="swatch-row">
+            <span class="swatch" style="background:#6adaf7" data-hex="#6adaf7"></span>
+            <span class="swatch" style="background:#008cbe" data-hex="#008cbe"></span>
+            <span class="swatch" style="background:#515979" data-hex="#515979"></span>
+            <span class="swatch" style="background:#fcfcfc; border-color:#ccc" data-hex="#fcfcfc"></span>
+          </div>
+        </div>
+      </div>
+      <div class="tags"><span class="tag">Strength · Owned illustration system</span><span class="tag">Weakness · Skews SaaS, not boutique</span></div>
+    </article>
+
+    <article class="comp">
+      <div class="row"><h3>Disruptive Advertising</h3><span class="url">disruptiveadvertising.com</span></div>
+      <p class="quote">"Most marketing budgets are wasted. Let's fix that."</p>
+      <div class="grid">
+        <div><h4>Positioning</h4><p>The most-reviewed agency. Urgency + risk-reversal pairing.</p></div>
+        <div><h4>Above-fold proof</h4><p>16+ enterprise logos (Adobe, KPMG, ConocoPhillips, Scotts). $450M+ ad spend managed. #145 Inc. 500.</p></div>
+        <div><h4>Type system</h4><p>Antonio (condensed display, ALL-CAPS) + Inter (body).</p></div>
+        <div><h4>Palette</h4>
+          <div class="swatch-row">
+            <span class="swatch" style="background:#C61D23" data-hex="#C61D23"></span>
+            <span class="swatch" style="background:#080808" data-hex="#080808"></span>
+            <span class="swatch" style="background:#800507" data-hex="#800507"></span>
+            <span class="swatch" style="background:#f8f8f8; border-color:#ccc" data-hex="#f8f8f8"></span>
+          </div>
+        </div>
+      </div>
+      <div class="tags"><span class="tag">Strength · Urgency + safety combo</span><span class="tag">Weakness · Visually dense; not restrained</span></div>
+    </article>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section>
+    <div class="section-num">02</div>
+    <h2>Comparison Matrix</h2>
+    <p style="margin-bottom: 18px;">Scored 1–10 across 8 evaluation criteria. Total /80.</p>
+    <table>
+      <thead>
+        <tr><th>Criterion</th><th>Tier 11</th><th>CTC</th><th>Acquisition</th><th>KlientBoost</th><th>Disruptive</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Search visibility</td><td class="score">8</td><td class="score">9</td><td class="score high">10</td><td class="score">9</td><td class="score high">10</td></tr>
+        <tr><td>Review &amp; social proof</td><td class="score">7</td><td class="score">9</td><td class="score high">10</td><td class="score">9</td><td class="score high">10</td></tr>
+        <tr><td>Visual design quality</td><td class="score">9</td><td class="score">9</td><td class="score">9</td><td class="score">7</td><td class="score">8</td></tr>
+        <tr><td>Mobile experience</td><td class="score">9</td><td class="score">9</td><td class="score">9</td><td class="score">9</td><td class="score">9</td></tr>
+        <tr><td>Content depth</td><td class="score">8</td><td class="score">8</td><td class="score">9</td><td class="score">9</td><td class="score">9</td></tr>
+        <tr><td>Logo strip strength</td><td class="score">8</td><td class="score">9</td><td class="score">8</td><td class="score">7</td><td class="score">8</td></tr>
+        <tr><td>CTA clarity</td><td class="score">9</td><td class="score">6</td><td class="score high">10</td><td class="score">9</td><td class="score">9</td></tr>
+        <tr><td>Premium feel</td><td class="score high">9</td><td class="score">8</td><td class="score">8</td><td class="score">6</td><td class="score">7</td></tr>
+        <tr class="total"><td>Total</td><td class="score">65</td><td class="score">65</td><td class="score">70</td><td class="score">65</td><td class="score">70</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PATTERNS -->
+  <section>
+    <div class="section-num">03</div>
+    <h2>Patterns of the Top 10%</h2>
+    <p style="margin-bottom: 28px;">Five non-negotiable moves every elite agency makes — and what CFS must adopt to compete at that tier.</p>
+
+    <div class="pattern">
+      <div class="n">1</div>
+      <div>
+        <h3>One typeface, used with confidence.</h3>
+        <p>Acquisition.com is all Poppins. Tier 11 is all Inter. Disruptive is Antonio + Inter. <em class="italic-serif">Nobody loads four fonts.</em> Restraint reads as premium; weight does the work, not novelty.</p>
+      </div>
+    </div>
+
+    <div class="pattern">
+      <div class="n">2</div>
+      <div>
+        <h3>Hero = problem statement, not service.</h3>
+        <p>No elite agency says "We run Facebook ads." They say <em class="italic-serif">"Most marketing budgets are wasted"</em> or <em class="italic-serif">"We find what's holding you back."</em> The headline accuses a pain — the buyer pre-qualifies themselves.</p>
+      </div>
+    </div>
+
+    <div class="pattern">
+      <div class="n">3</div>
+      <div>
+        <h3>One signature color owns the brand.</h3>
+        <p>Tier 11 = pink. Acquisition = purple. Disruptive = red. CTC = lime. <em class="italic-serif">CFS already has this: champagne gold <span style="color:#c9a25a;">#DAB25E</span>.</em> The job isn't to choose one — it's to use the existing one harder.</p>
+      </div>
+    </div>
+
+    <div class="pattern">
+      <div class="n">4</div>
+      <div>
+        <h3>Fewer logos, higher quality.</h3>
+        <p>Tier 11 shows 6 logos and outranks Disruptive's 16 on premium feel. <em class="italic-serif">Restraint > volume.</em> A logo strip should signal proof of caliber, not desperation of breadth.</p>
+      </div>
+    </div>
+
+    <div class="pattern">
+      <div class="n">5</div>
+      <div>
+        <h3>Methodology has a proper noun.</h3>
+        <p>"Prophit Engine" (CTC). "$100M Money Models" (Acquisition). "Authenticity Wins™" (Disruptive). The elite agencies don't sell services — they sell a <em class="italic-serif">productized framework with a trademarkable name.</em> This is the single biggest gap CFS can close.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECOMMENDATION -->
+  <section>
+    <div class="rec">
+      <span class="badge">Recommended Direction</span>
+      <h2>Editorial dark.<br>Champagne accent.<br>Named methodology.</h2>
+      <p style="font-size: 16px;">CFS should occupy the position no competitor holds: <em class="italic-serif" style="color:#f6f4f0;">a dark, editorial, restrained boutique — for operator-CEOs who are done with agency theatre.</em> Keep the dark-and-gold palette. Upgrade typography to editorial serif + disciplined sans. Name the system. Replace the ROAS guarantee with caliber signals.</p>
+
+      <div class="pair">
+        <div>
+          <h4>Type pairing</h4>
+          <p><em class="italic-serif" style="color:#f6f4f0; font-size: 22px;">Instrument Serif</em> for editorial headlines · <strong style="color:#f6f4f0; font-weight:500;">Inter</strong> for body and UI. One serif voice + one workhorse sans.</p>
+        </div>
+        <div>
+          <h4>Palette</h4>
+          <div class="swatch-row" style="margin-top:8px;">
+            <span class="swatch" style="background:#0e0d0c" data-hex="#0E0D0C"></span>
+            <span class="swatch" style="background:#1a1715" data-hex="#1A1715"></span>
+            <span class="swatch" style="background:#DAB25E" data-hex="#DAB25E"></span>
+            <span class="swatch" style="background:#c9a25a" data-hex="#C9A25A"></span>
+            <span class="swatch" style="background:#f6f4f0" data-hex="#F6F4F0"></span>
+          </div>
+        </div>
+        <div>
+          <h4>Methodology name</h4>
+          <p><em class="italic-serif" style="color:#DAB25E; font-size: 22px;">The Flow Method™</em> — the named system the 6-step process rolls up into. Operator-coded, brand-aligned, trademarkable.</p>
+        </div>
+        <div>
+          <h4>Hero replacement</h4>
+          <p style="color:#f6f4f0;"><em class="italic-serif">"Most ad spend leaks out the back. We rebuild the system underneath."</em> Problem statement. No guarantee. No "2X ROAS." Caliber, not promise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>CEO Flow Systems · Competitive Analysis · v1.0</span>
+    <span>Prepared 2026-05-17</span>
+  </footer>
+</div>
+</body>
+</html>
